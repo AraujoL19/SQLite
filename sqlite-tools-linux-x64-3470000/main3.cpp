@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <sqlite3.h>
+#include <sqlite3ext.h>
 
 using namespace std;
 
@@ -147,7 +148,7 @@ int main(){
     sqlite3* DB;
 
     createDB(dir);
-    createTable(dir);
+    createInput(dir);
     insertData(dir);
     
     return 0;

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sqlite3.h>
+#include <sqlite3ext.h>
 #include <iostream>
 
 using namespace std;
@@ -28,7 +29,7 @@ static int createTable(const char* s){
 
     try{
         int exit = 0;
-        exit = sqlite3_open(s, &DB);
+        exit = sqlite3_vfs(s, &DB);
         char* messageError;
         exit = sqlite3_exec(DB, sql.c_str(), nullptr, 0, &messageError);
 
@@ -49,7 +50,7 @@ static int insertData(const char* s){
     sqlite3* DB;
     char* messageError;
 
-    int exit = sqlite3_open(s, &DB);
+    int exit = sqlite3_vfs(s, &DB);
 
     string sql("INSERT INTO GRADES (NAME, LNAME, AGE, ADDRESS, GRADE) VALUES('Alice', 'Chapa', 35, 'Tampa', 'A');"
     "INSERT INTO GRADES (NAME, LNAME, AGE, ADDRESS, GRADE) VALUES('Bob', 'Lee', 20, 'Dallas', 'B');"
