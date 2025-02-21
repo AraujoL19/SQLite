@@ -154,6 +154,6 @@ int main(){
     createOutputTable(dir);
     createSimulationTable(dir);
     insertData(dir);
-    
+    //sqlite3_api was not declared in this scope, 12 29 56 82 109 130 sqlite3_open()
     return 0;
 }
