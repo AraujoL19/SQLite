@@ -56,7 +56,7 @@ int main() {
     //declara uma db do tipo sqlite3
     sqlite3* db;
     //funcao open
-    int rc = sqlite3_open("simulation.db", &db);
+    int rc = sqlite3_open16("simulation.db", &db);
     
     //verifica se abriu o banco de dados
     if (rc) {

@@ -16,7 +16,7 @@ static int createDB(const char* s){
     return 0;
 }
 
-static int createSimulation(const char* s){
+static int createSimulationTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS SIMULATION("
     "SIMULATION_ID INTEGER PRIMARY KEY, "
@@ -43,7 +43,7 @@ static int createSimulation(const char* s){
     return 0;
 }
 
-static int createOutput(const char* s){
+static int createOutputTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS OUTPUT("
     "OUTPUD_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -70,7 +70,7 @@ static int createOutput(const char* s){
     return 0;
 }
 
-static int createModel(const char* s){
+static int createModelTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS MODEL("
     "MODEL_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -96,7 +96,7 @@ static int createModel(const char* s){
     return 0;
 }
 
-static int createInput(const char* s){
+static int createInputTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS INPUT("
     "INPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -148,7 +148,7 @@ int main(){
     sqlite3* DB;
 
     createDB(dir);
-    createInput(dir);
+    createInputTable(dir);
     insertData(dir);
     
     return 0;
