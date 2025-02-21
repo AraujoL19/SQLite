@@ -4,6 +4,17 @@
 
 using namespace std;
 
+static int createDB(const char* s){
+    sqlite3* DB;
+    int exit = 0;
+
+    exit = sqlite3_open(s, &DB);
+
+    sqlite3_close(DB);
+
+    return 0;
+}
+
 static int createSimulation(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS SIMULATION("
@@ -132,6 +143,12 @@ static int insertData(const char* s){
 }
 
 int main(){
-    cout<<"Hello world!"<<endl;
+    const char* dir = "/home/araujol/Documentos/Araujo/SQLite/sqlite-tools-linux-x64-3470000/Teste.db";
+    sqlite3* DB;
+
+    createDB(dir);
+    createTable(dir);
+    insertData(dir);
+    
     return 0;
 }
