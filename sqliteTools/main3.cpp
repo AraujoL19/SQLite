@@ -145,7 +145,8 @@ static int insertData(const char* s){
 }
 
 int main(){
-    const char* dir = "/home/araujol/Documentos/Araujo/SQLite/sqlite-tools-linux-x64-3470000/Teste.db";
+    //const char* dir = "/home/araujol/Documentos/Araujo/SQLite/sqlite-tools-linux-x64-3470000/Teste.db";
+    const char* dir = "C:\Users\yldog\OneDrive\Documentos\ICimunoendocrino";
     sqlite3* DB;
 
     createDB(dir);
