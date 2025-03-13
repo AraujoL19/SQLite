@@ -18,9 +18,10 @@ static int createSimulationTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS SIMULATION("
     "SIMULATION_ID INTEGER PRIMARY KEY, "
-    "OUTPUT_ID INTEGER FOREIGN KEY NOT NULL, "
+    "OUTPUT_ID INTEGER NOT NULL, "
     "TIME_DAYS INTEGER NOT NULL, "
-    "SIMULATION_STATUS TEXT NOT NULL);";
+    "SIMULATION_STATUS TEXT NOT NULL, "
+    "FOREIGN KEY (OUTPUT_ID) REFERENCES OUTPUT(OUTPUD_ID));";
 
     try{
         int exit = 0;
@@ -44,10 +45,12 @@ static int createSimulationTable(const char* s){
 static int createOutputTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS OUTPUT("
-    "OUTPUD_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "MODEL_ID INTEGER FOREIGN KEY NOT NULL, "
+    "OUTPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+    "MODEL_ID INTEGER NOT NULL, "
     "INPUT_ID NOT NULL, "
-    "RESULTS TEXT NOT NULL);";
+    "RESULTS TEXT NOT NULL, "
+    "FOREIGN KEY (MODEL_ID) REFERENCES MODEL(MODEL_ID), "
+    "FOREIGN KEY (INPUT_ID) REFERENCES INPUT(INPUD_ID));";
 
     try{
         int exit = 0;
