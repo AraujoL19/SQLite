@@ -1,14 +1,12 @@
 #include <iostream>
 #include <stdio.h>
-#include <sqlite3.h>
-#include <sqlite3ext.h>
+#include "sqlite3.h"
 
 using namespace std;
 
 static int createDB(const char* s){
     sqlite3* DB;
     int exit = 0;
-
     exit = sqlite3_open(s, &DB);
 
     sqlite3_close(DB);
@@ -145,7 +143,7 @@ static int insertData(const char* s){
 }
 
 int main(){
-    const char* dir = "/home/araujol/Documentos/Araujo/SQLite/sqlite-tools-linux-x64-3470000/Teste.db";
+    const char* dir = "/home/araujol/Documentos/Araujo/SQLite/Teste.db";
     //const char* dir = "C:\Users\yldog\OneDrive\Documentos\ICimunoendocrino";
     sqlite3* DB;
 
