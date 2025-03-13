@@ -5,11 +5,10 @@
 using namespace std;
 
 static int createDB(const char* s){
-    sqlite3* DB;
+    sqlite3* db;
     int exit = 0;
-    exit = sqlite3_open(s, &DB);
-
-    sqlite3_close(DB);
+    exit = sqlite3_open(s, &db);
+    sqlite3_close(db);
 
     return 0;
 }
