@@ -4,6 +4,7 @@
         "iostream": "cpp",
         "optional": "cpp",
         "variant": "cpp",
-        "string": "c"
+        "string": "c",
+        "stdio.h": "c"
     }
 }
