@@ -220,29 +220,44 @@ static int insertDataGlobal(const char* s){
 
 int main(){
     //const char* dir = "/home/araujol/Documentos/Araujo/SQLite/Teste.db";
-    const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/Teste.db";
+    const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/FinalTest.db";
     sqlite3* DB;
+    cout<<"Declara a DB"<<endl;
 
     //cria a DB no diretório especificado
     createDB(dir);
+    cout<<"Cria a DB"<<endl;
     
     //cria cada uma das tabelas
     createInputTable(dir);
+    cout<<"Criou a tabela input"<<endl;
+
     createModelTable(dir);
+    cout<<"Criou a tabela model"<<endl;
+
     createOutputTable(dir);
+    cout<<"Criou a tabela output"<<endl;
+
     createSimulationTable(dir);
-    
+    cout<<"Criou a tabela simulation"<<endl;
+
     //insertDataGlobal(dir); antiga função de inserção de dados
 
     //insere os dados passados como parâmetro
-    insertInputData(dir, 1, "ParametrosCortisol", 'M', "InitialConditions");
+    insertInputData(dir, 1, "CortisolParams", 'M', "InitialConditions");
+    cout<<"Inseriu dados na tabela input"<<endl;
+
     insertModelData(dir, 1, "ModelDescription", 1);
+    cout<<"Inseriu dados na tabela model"<<endl;
+
     insertOutputData(dir, 1, 1, 1, "Results");
+    cout<<"Inseriu dados na tabela output"<<endl;
+
     insertSimulationData(dir, 1, 1, 365, "simulation run");
-    
+    cout<<"Inseriu dados na tabela simulation"<<endl;
 
     //erro que ta dando : sqlite3_api was not declared in this scope, 12 29 56 82 109 130 sqlite3_open()
     //tem que arrumar também os erros de undefined reference
-    
+
     return 0;
 }
