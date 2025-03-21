@@ -256,8 +256,6 @@ int main(){
     insertSimulationData(dir, 1, 1, 365, "simulation run");
     cout<<"Inseriu dados na tabela simulation"<<endl;
 
-    //erro que ta dando : sqlite3_api was not declared in this scope, 12 29 56 82 109 130 sqlite3_open()
-    //tem que arrumar também os erros de undefined reference
 
     return 0;
 }
