@@ -219,8 +219,8 @@ static int insertDataGlobal(const char* s){
 }
 
 int main(){
-    const char* dir = "/home/araujol/Documentos/Araujo/SQLite/Teste.db";
-    //const char* dir = "C:\Users\yldog\OneDrive\Documentos\ICimunoendocrino";
+    //const char* dir = "/home/araujol/Documentos/Araujo/SQLite/Teste.db";
+    const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/Teste.db";
     sqlite3* DB;
 
     //cria a DB no diretório especificado
