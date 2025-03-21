@@ -38,7 +38,7 @@ static int insertModelData(const char* s, int modelId, const string& modelDescri
     char* messageError;
     int exit = sqlite3_open(s, &DB);
 
-    string sql = "INSERT INTO INPUT (MODEL_ID, MODEL_DESCRIPTION, MODEL_VERSION) VALUES("
+    string sql = "INSERT INTO MODEL (MODEL_ID, MODEL_DESCRIPTION, MODEL_VERSION) VALUES("
         + to_string(modelId) + ", '" + modelDescription + "', " + to_string(modelVersion) + ");"; 
     exit = sqlite3_exec(DB, sql.c_str(), nullptr, 0, &messageError);
     if(exit != SQLITE_OK){
@@ -94,7 +94,7 @@ static int createSimulationTable(const char* s){
     "OUTPUT_ID INTEGER NOT NULL, "
     "TIME_DAYS INTEGER NOT NULL, "
     "SIMULATION_STATUS TEXT NOT NULL, "
-    "FOREIGN KEY (OUTPUT_ID) REFERENCES OUTPUT(OUTPUD_ID));";
+    "FOREIGN KEY (OUTPUT_ID) REFERENCES OUTPUT(OUTPUT_ID));";
 
     try{
         int exit = 0;
@@ -123,7 +123,7 @@ static int createOutputTable(const char* s){
     "INPUT_ID NOT NULL, "
     "RESULTS TEXT NOT NULL, "
     "FOREIGN KEY (MODEL_ID) REFERENCES MODEL(MODEL_ID), "
-    "FOREIGN KEY (INPUT_ID) REFERENCES INPUT(INPUD_ID));";
+    "FOREIGN KEY (INPUT_ID) REFERENCES INPUT(INPUT_ID));";
 
     try{
         int exit = 0;
