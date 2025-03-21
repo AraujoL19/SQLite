@@ -174,9 +174,7 @@ static int createInputTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS INPUT("
     "INPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "CORTISOL_EXP_PARAMETERS TEXT NOT NULL, "
-    "SIMULATION_GENDER CHAR(1) NOT NULL, "
-    "INITIAL_CONDITIONS TEXT NOT NULL);";
+    "MODEL_PARAMETERS TEXT NOT NULL"");";
 
     try{
         int exit = 0;
@@ -220,11 +218,13 @@ static int insertDataGlobal(const char* s){
 
 int main(){
     //const char* dir = "/home/araujol/Documentos/Araujo/SQLite/Teste.db";
-    const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/FinalTest.db";
+    const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/Database.db";
+    
     sqlite3* DB;
     cout<<"Declara a DB"<<endl;
 
     //cria a DB no diretório especificado
+    
     createDB(dir);
     cout<<"Cria a DB"<<endl;
     
