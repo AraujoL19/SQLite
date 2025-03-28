@@ -2,6 +2,7 @@
 #include "sqlite3.h"
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
@@ -120,14 +121,13 @@ int createSimulationTable(const char* s){
     return 0;
 }
 
-int insertInputData(const char* s, int inputId, const string& cortisolExpParams, 
-                         char simulationGender, const string& initialConditions) {
+int insertInputData(const char* s, int inputId, const string& modelParam){
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
 
-    string sql = "INSERT INTO INPUT (INPUT_ID, CORTISOL_EXP_PARAMETERS, SIMULATION_GENDER, INITIAL_CONDITIONS) VALUES("
-        + to_string(inputId) + ", '" + cortisolExpParams + "', '" + simulationGender + "', '" + initialConditions + "');"; 
+    string sql = "INSERT INTO INPUT (INPUT_ID, MODEL_PARAMETERS) VALUES("
+        + to_string(inputId) + ", '" + modelParam + "');"; 
     exit = sqlite3_exec(DB, sql.c_str(), nullptr, 0, &messageError);
     if(exit != SQLITE_OK) {
         cerr << "Error inserting into INPUT: " << messageError << endl;
@@ -211,4 +211,53 @@ int insertGeneralData(const char* s) {
         cout << "Records created sucessfully" << endl;
     }
     return 0;
+}
+
+int printTableData(void* data, int argCount, char** argVector, char** columnName) {
+    //prints column names
+    bool headerPrinted = false;
+    if (!headerPrinted) {
+        for(int i = 0; i < argCount; i++) {
+            cout << left << setw(17) << columnName[i] << " | ";
+        }
+        headerPrinted = true;
+        cout<<endl;
+    }
+    
+    //prints each row
+    for(int i = 0; i < argCount; i++) {
+        if(argVector[i]) {
+            cout << left << setw(17) << argVector[i] << " | ";
+        } else {
+            cout << left << setw(17) << "NULL" << " | ";
+        }
+    }
+    cout << endl;
+    
+    return 0;
+}
+
+int checkTableData(const char* s, const string& tableName) {
+    sqlite3* DB;
+    char* messageError;
+    int exit = sqlite3_open(s, &DB);
+    
+    if (exit != SQLITE_OK) {
+        cerr << "Error opening database: " << sqlite3_errmsg(DB) << endl;
+        sqlite3_close(DB);
+        return exit;
+    }
+
+    string sql = "SELECT * FROM " + tableName + ";";
+    
+    cout << "\nContents of table '" << tableName << "':" << endl;
+    exit = sqlite3_exec(DB, sql.c_str(), printTableData, nullptr, &messageError);
+    
+    if(exit != SQLITE_OK) {
+        cerr << "Error while reading from table " << tableName << ": " << messageError << endl;
+        sqlite3_free(messageError);
+    }
+    
+    sqlite3_close(DB);
+    return exit;
 }
