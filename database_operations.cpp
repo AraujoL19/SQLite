@@ -1,49 +1,43 @@
-#include <iostream>
-#include <iomanip>
-#include <stdio.h>
+#include "database_operations.h"
 #include "sqlite3.h"
 #include <vector>
+#include <iostream>
 #include <string>
-#include "database_operations.h"
 
 using namespace std;
 
-/*
-static int createDB(const char* s){
+int createDB(const char* s) {
     sqlite3* db;
-    int exit = 0;
-    exit = sqlite3_open(s, &db);
+    int exit = sqlite3_open(s, &db);
     sqlite3_close(db);
-
     return 0;
 }
 
-static int createInputTable(const char* s){
+int createInputTable(const char* s) {
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS INPUT("
-    "INPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-    "MODEL_PARAMETERS TEXT NOT NULL"");";
+        "INPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "MODEL_PARAMETERS TEXT NOT NULL"");";
 
-    try{
-        int exit = 0;
-        exit = sqlite3_open(s, &DB);
+    try {
+        int exit = sqlite3_open(s, &DB);
         char* messageError;
         exit = sqlite3_exec(DB, sql.c_str(), nullptr, 0, &messageError);
 
-        if(exit != SQLITE_OK){
+        if(exit != SQLITE_OK) {
             cerr << "Error create table" << endl;
             sqlite3_free(messageError);
-        }else{
-            cout<<"INPUT table created sucessfully" << endl;
+        } else {
+            cout << "Table created sucessfully" << endl;
         }
         sqlite3_close(DB);
-    }catch(const exception & e){
-        cerr<<e.what();
+    } catch(const exception & e) {
+        cerr << e.what();
     }
     return 0;
 }
 
-static int createModelTable(const char* s){
+int createModelTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS MODEL("
     "MODEL_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -69,7 +63,7 @@ static int createModelTable(const char* s){
     return 0;
 }
 
-static int createOutputTable(const char* s){
+int createOutputTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS OUTPUT("
     "OUTPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -98,7 +92,7 @@ static int createOutputTable(const char* s){
     return 0;
 }
 
-static int createSimulationTable(const char* s){
+int createSimulationTable(const char* s){
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS SIMULATION("
     "SIMULATION_ID INTEGER PRIMARY KEY, "
@@ -126,7 +120,8 @@ static int createSimulationTable(const char* s){
     return 0;
 }
 
-static int insertInputData(const char* s, int inputId, const string& cortisolExpParams, char simulationGender, const string& initialConditions){
+int insertInputData(const char* s, int inputId, const string& cortisolExpParams, 
+                         char simulationGender, const string& initialConditions) {
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
@@ -134,17 +129,17 @@ static int insertInputData(const char* s, int inputId, const string& cortisolExp
     string sql = "INSERT INTO INPUT (INPUT_ID, CORTISOL_EXP_PARAMETERS, SIMULATION_GENDER, INITIAL_CONDITIONS) VALUES("
         + to_string(inputId) + ", '" + cortisolExpParams + "', '" + simulationGender + "', '" + initialConditions + "');"; 
     exit = sqlite3_exec(DB, sql.c_str(), nullptr, 0, &messageError);
-    if(exit != SQLITE_OK){
-        cerr<<"Error inserting into INPUT table: "<<messageError<<endl;
+    if(exit != SQLITE_OK) {
+        cerr << "Error inserting into INPUT: " << messageError << endl;
         sqlite3_free(messageError);
-    }else{
-        cout<<"Record inserted into INPUT table sucessfully"<<endl;
+    } else {
+        cout << "Record inserted into INPUT sucessfully" << endl;
     }
     sqlite3_close(DB);
     return exit;
 }
 
-static int insertModelData(const char* s, int modelId, const string& modelDescription, int modelVersion){
+int insertModelData(const char* s, int modelId, const string& modelDescription, int modelVersion){
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
@@ -162,7 +157,7 @@ static int insertModelData(const char* s, int modelId, const string& modelDescri
     return exit;
 }
 
-static int insertOutputData(const char* s, int outputId, int modelId, int inputId, const string& results){
+int insertOutputData(const char* s, int outputId, int modelId, int inputId, const string& results){
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
@@ -180,7 +175,7 @@ static int insertOutputData(const char* s, int outputId, int modelId, int inputI
     return exit;
 }
 
-static int insertSimulationData(const char* s, int simulationId, int outputId, int timeDays, const string& simulationStatus){
+int insertSimulationData(const char* s, int simulationId, int outputId, int timeDays, const string& simulationStatus){
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
@@ -196,92 +191,24 @@ static int insertSimulationData(const char* s, int simulationId, int outputId, i
     }
     sqlite3_close(DB);
     return exit;
-}*/
-
-int printTableData(void* data, int argc, char** argv, char** azColName) {
-    // Imprime os nomes das colunas apenas na primeira linha
-    static bool headerPrinted = false;
-    if (!headerPrinted) {
-        for(int i = 0; i < argc; i++) {
-            cout << left << setw(20) << azColName[i] << " | ";
-        }
-        cout << endl << string(argc * 23, '-') << endl;
-        headerPrinted = true;
-    }
-    
-    // Imprime os dados de cada linha
-    for(int i = 0; i < argc; i++) {
-        if(argv[i]) {
-            cout << left << setw(20) << argv[i] << " | ";
-        } else {
-            cout << left << setw(20) << "NULL" << " | ";
-        }
-    }
-    cout << endl;
-    
-    return 0;
 }
 
-int checkTableData(const char* s, const string& tableName) {
+int insertGeneralData(const char* s) {
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
-    
-    if (exit != SQLITE_OK) {
-        cerr << "Error opening database: " << sqlite3_errmsg(DB) << endl;
-        sqlite3_close(DB);
-        return exit;
-    }
 
-    string sql = "SELECT * FROM " + tableName + ";";
-    
-    cout << "\nContents of table '" << tableName << "':" << endl;
-    exit = sqlite3_exec(DB, sql.c_str(), printTableData, nullptr, &messageError);
-    
+    string sql("INSERT INTO INPUT (INPUT_ID, CORTISOL_EXP_PARAMETERS, SIMULATION_GENDER, INITIAL_CONDITIONS) VALUES(1, 'cortisolExp', 'F', 'initialConditions');"
+    "INSERT INTO MODEL (MODEL_ID, MODEL_DESCRIPTION, MODEL_VERSION) VALUES(1, 'modelDescription', 10);"
+    "INSERT INTO OUTPUT (OUTPUT_ID, MODEL_ID, INPUT_ID, RESULTS) VALUES(1, 1, 1, 'results');"
+    "INSERT INTO SIMULATION (SIMULATION_ID, OUTPUT_ID, TIME_DAYS, SIMULATION_STATUS) VALUES(1, 1, 365, 'simulation run');");
+
+    exit = sqlite3_exec(DB, sql.c_str(), nullptr, 0, &messageError);
     if(exit != SQLITE_OK) {
-        cerr << "Error reading table " << tableName << ": " << messageError << endl;
+        cerr << "error insert" << endl;
         sqlite3_free(messageError);
     } else {
-        cout << "\nTable data displayed successfully" << endl;
+        cout << "Records created sucessfully" << endl;
     }
-    
-    sqlite3_close(DB);
-    return exit;
-}
-
-int main(){
-
-    //diretorio linux do PPGMC
-    //const char* dir = "/home/araujol/Documentos/Araujo/SQLite/Teste.db";
-    
-    //diretorio windows pessoal
-    const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/Database.db";
-    
-    sqlite3* DB;
-    cout<<"Declara a DB"<<endl;
-    
-    //cria a DB no diretorio
-    createDB(dir);
-    cout<<"Cria a DB"<<endl;
-    
-    //creates tables in the database
-    createInputTable(dir);
-    createModelTable(dir);
-    createOutputTable(dir);
-    createSimulationTable(dir);
-
-    //inserts data from functions
-    insertInputData(dir, 1, "CortisolParams", 'M', "InitialConditions");
-    insertModelData(dir, 1, "ModelDescription", 1);
-    insertOutputData(dir, 1, 1, 1, "Results");
-    insertSimulationData(dir, 1, 1, 365, "simulation run");
-
-    //prints data from tables
-    checkTableData(dir, "INPUT");
-    checkTableData(dir, "MODEL");
-    checkTableData(dir, "OUTPUT");
-    checkTableData(dir, "SIMULATION");
-
-
     return 0;
 }
