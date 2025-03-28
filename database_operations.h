@@ -20,6 +20,6 @@ int insertOutputData(const char* s, int outputId, int modelId, int inputId,
                     const std::string& results);
 int insertSimulationData(const char* s, int simulationId, int outputId, 
                         int timeDays, const std::string& simulationStatus);
-static int insertGeneralData(const char* s);
+int insertGeneralData(const char* s);
 
 #endif // DATABASE_OPERATIONS_H
