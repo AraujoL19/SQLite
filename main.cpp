@@ -29,10 +29,10 @@ int main(){
     createSimulationTable(dir);
 
     //inserts data from functions
-    insertInputData(dir, 1, "ModelParams");
-    insertModelData(dir, 1, "ModelDescription", 1);
-    insertOutputData(dir, 1, 1, 1, "Results");
-    insertSimulationData(dir, 1, 1, 365, "simulation run");
+    insertInputData(dir, 2, "ModelParams2");
+    insertModelData(dir, 2, "ModelDescription2", 2);
+    insertOutputData(dir, 2, 2, 2, "Results2");
+    insertSimulationData(dir, 2, 2, 30, "simulation run2");
 
     //prints data from tables
     checkTableData(dir, "INPUT");
