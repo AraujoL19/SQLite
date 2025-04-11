@@ -213,24 +213,30 @@ int insertGeneralData(const char* s) {
     return 0;
 }
 
-int printTableData(void* data, int argCount, char** argVector, char** columnName) {
-    //prints column names
+struct PrintContext {
     bool headerPrinted = false;
-    if (!headerPrinted) {
+    string tableName;
+};
+
+int printTableData(void* data, int argCount, char** argVector, char** columnName) {
+    PrintContext* context = static_cast<PrintContext*>(data);
+    
+    //prints header only once
+    if (!context->headerPrinted) {
+        //prints table title
+        cout << "\nContents of table '" << context->tableName << "':" << endl;
+        
+        //prints column names
         for(int i = 0; i < argCount; i++) {
             cout << left << setw(17) << columnName[i] << " | ";
         }
-        headerPrinted = true;
-        cout<<endl;
+        cout << endl;
+        context->headerPrinted = true;
     }
     
-    //prints each row
+    //prints data from each row
     for(int i = 0; i < argCount; i++) {
-        if(argVector[i]) {
-            cout << left << setw(17) << argVector[i] << " | ";
-        } else {
-            cout << left << setw(17) << "NULL" << " | ";
-        }
+        cout << left << setw(17) << (argVector[i] ? argVector[i] : "NULL") << " | ";
     }
     cout << endl;
     
@@ -248,10 +254,14 @@ int checkTableData(const char* s, const string& tableName) {
         return exit;
     }
 
+    //creates printContext
+    PrintContext context;
+    context.tableName = tableName;
+    context.headerPrinted = false;
+
     string sql = "SELECT * FROM " + tableName + ";";
     
-    cout << "\nContents of table '" << tableName << "':" << endl;
-    exit = sqlite3_exec(DB, sql.c_str(), printTableData, nullptr, &messageError);
+    exit = sqlite3_exec(DB, sql.c_str(), printTableData, &context, &messageError);
     
     if(exit != SQLITE_OK) {
         cerr << "Error while reading from table " << tableName << ": " << messageError << endl;
