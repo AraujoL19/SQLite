@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -18,7 +19,8 @@ int createInputTable(const char* s) {
     sqlite3* DB;
     string sql = "CREATE TABLE IF NOT EXISTS INPUT("
         "INPUT_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "MODEL_PARAMETERS TEXT NOT NULL"");";
+        "MODEL_PARAMETERS JSON NOT NULL CHECK(json_valid(MODEL_PARAMETERS))"
+        ");";
 
     try {
         int exit = sqlite3_open(s, &DB);
@@ -121,7 +123,7 @@ int createSimulationTable(const char* s){
     return 0;
 }
 
-int insertInputData(const char* s, int inputId, const string& modelParam){
+/*int insertInputData(const char* s, int inputId, const string& modelParam){
     sqlite3* DB;
     char* messageError;
     int exit = sqlite3_open(s, &DB);
@@ -137,6 +139,61 @@ int insertInputData(const char* s, int inputId, const string& modelParam){
     }
     sqlite3_close(DB);
     return exit;
+}*/
+
+int insertInputData(const char* s, int inputId, const string& jsonFilePath) {
+    sqlite3* db;
+    char* errMsg = nullptr;
+    
+    //reads json file
+    ifstream jsonFile(jsonFilePath);
+
+    if (!jsonFile.is_open()) {
+        cerr << "Error opening JSON file: " << jsonFilePath << endl;
+        return SQLITE_ERROR;
+    }
+
+    stringstream buffer;
+    buffer << jsonFile.rdbuf();
+    string jsonContent = buffer.str();
+    jsonFile.close();
+
+    //json validation
+    int rc = sqlite3_open(s, &db);
+    if (rc != SQLITE_OK) {
+        cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
+        return rc;
+    }
+
+    //using prepared statement
+    const char* sql = "INSERT INTO INPUT (INPUT_ID, MODEL_PARAMETERS) VALUES(?, json(?));";
+    sqlite3_stmt* stmt;
+    
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        cerr << "Prepare failed: " << sqlite3_errmsg(db) << endl;
+        sqlite3_close(db);
+        return rc;
+    }
+
+    //links parameters
+    sqlite3_bind_int(stmt, 1, inputId);
+    sqlite3_bind_text(stmt, 2, jsonContent.c_str(), -1, SQLITE_STATIC);
+
+    //execution
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        cerr << "Insert failed: " << sqlite3_errmsg(db) << endl;
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return rc;
+    }
+
+    cout << "Data inserted successfully (ID: " << inputId << ")" << endl;
+    
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return SQLITE_OK;
 }
 
 int insertModelData(const char* s, int modelId, const string& modelDescription, int modelVersion){

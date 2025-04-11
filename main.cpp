@@ -15,6 +15,7 @@ int main(){
     
     //diretorio windows pessoal
     const char* dir = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/Database1.db";
+    const char* json = "C:/Users/yldog/OneDrive/Documentos/ICimunoendocrino/SQLite/params.json";
     
     //declara a DB
     sqlite3* DB;
@@ -29,10 +30,11 @@ int main(){
     createSimulationTable(dir);
 
     //inserts data from functions
-    insertInputData(dir, 2, "ModelParams2");
-    insertModelData(dir, 2, "ModelDescription2", 2);
-    insertOutputData(dir, 2, 2, 2, "Results2");
-    insertSimulationData(dir, 2, 2, 30, "simulation run2");
+    insertInputData(dir, 3, json);
+    //insertInputData(dir, 2, "ModelParams2");
+    insertModelData(dir, 3, "ModelDescription3", 3);
+    insertOutputData(dir, 3, 3, 3, "Results3");
+    insertSimulationData(dir, 3, 3, 7, "simulation run3");
 
     //prints data from tables
     checkTableData(dir, "INPUT");
