@@ -1,0 +1,10 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "iostream": "cpp",
+        "optional": "cpp",
+        "variant": "cpp",
+        "string": "c",
+        "stdio.h": "c"
+    }
+}
