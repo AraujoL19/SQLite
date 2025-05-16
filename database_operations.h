@@ -4,18 +4,20 @@
 #include <string>
 #include "sqlite3.h"
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
-//criação de tabelas
+//table creation
 int createDB(const char* s);
 int createInputTable(const char* s);
 int createModelTable(const char* s);
 int createOutputTable(const char* s);
 int createSimulationTable(const char* s);
 
-//inserção de dados
-int insertInputData(const char* s, int inputId, const string& modelParam);
+//data insertion
+int insertInputData(const char* s, int inputId, const string& jsonFilePath);
+//int insertInputData(const char* s, int inputId, const string& modelParam);
 int insertModelData(const char* s, int modelId, const std::string& modelDescription, 
                    int modelVersion);
 int insertOutputData(const char* s, int outputId, int modelId, int inputId, 
